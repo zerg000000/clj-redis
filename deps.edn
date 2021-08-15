@@ -1,3 +1,9 @@
 {:paths ["src"]
- :deps {io.vertx/vertx-redis-client {:mvn/version "4.1.2"}
-        funcool/promesa {:mvn/version "6.0.2"}}}
+ :deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        io.vertx/vertx-redis-client {:mvn/version "4.1.2"}}
+ :aliases {:test {:main-opts   ["-m" "kaocha.runner"]
+                  :extra-paths ["test"]
+                  :extra-deps  {org.clojure/test.check {:mvn/version "1.0.0"}
+                                lambdaisland/kaocha    {:mvn/version "1.0.700"}
+                                funcool/promesa {:mvn/version "6.0.2"}
+                                clj-test-containers/clj-test-containers {:mvn/version "0.4.0"}}}}}

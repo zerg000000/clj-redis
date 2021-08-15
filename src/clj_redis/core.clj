@@ -1,5 +1,6 @@
 (ns clj-redis.core
   (:refer-clojure :exclude [send])
+  (:require [clj-redis.response :as response])
   (:import
     (io.vertx.core
       Future
@@ -19,7 +20,12 @@
     (java.util
       List)
     (java.util.concurrent
-      CompletionStage)))
+      CompletionStage)
+    (java.util.function Function)))
+
+(defn jfn [f]
+  (reify Function
+    (apply [this t] (f t))))
 
 
 (defn ^RedisOptions map->redis-options
@@ -65,14 +71,17 @@
 
 
 (defn ^CompletionStage send
-  "Return CompletionStage<Response>"
-  [^Redis client ^Request req]
-  (-> (send* client req)
-      (.toCompletionStage)))
+  "Return CompletionStage<Response|nil>. Sends a command"
+  ([^Redis client ^Request req] (send client req {}))
+  ([^Redis client ^Request req {:keys [mapper]
+                                :or {mapper response/to-val}}]
+   (cond-> (-> (send* client req)
+               (.toCompletionStage))
+     mapper (.thenApply (jfn mapper)))))
 
 
 (defn ^CompletionStage batch
-  "Return CompletionStage<List<Response>>"
+  "Return CompletionStage<List<Response|nil>>. Sends a list of commands in a single IO operation"
   [client reqs]
   (-> (batch* client reqs)
       (.toCompletionStage)))

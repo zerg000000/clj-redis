@@ -65,8 +65,8 @@
 
 
 (defn ^String to-string
-  [^Response resp ^Charset charset]
-  (some-> resp (.toString charset)))
+  [^Response resp]
+  (some-> resp (.toString)))
 
 
 (defn ^Buffer to-buffer
@@ -84,14 +84,15 @@
   (some-> resp (.attributes)))
 
 
-(defn ^Map to-map
-  [^Response resp]
-  (when resp
-    (loop [m (transient {})
-           [k & ks]  (.getKeys resp)]
-      (if k
-        (recur (assoc! m k (to-val (.get resp ^String k))) ks)
-        (persistent! m)))))
+(defn to-map
+  [kv-mapper]
+  (fn [^Response resp]
+    (when resp
+      (loop [m (transient {})
+             [k & ks]  (.getKeys resp)]
+        (if k
+          (recur (assoc! m k (kv-mapper k (.get resp ^String k))) ks)
+          (persistent! m))))))
 
 
 (defn to-val
@@ -101,7 +102,7 @@
       ResponseType/ATTRIBUTE (to-map resp)
       ResponseType/BOOLEAN (to-boolean resp)
       ResponseType/BULK (to-bytes resp)
-      ResponseType/ERROR (to-string resp (Charset/forName "UTF-8"))
+      ResponseType/ERROR (to-string resp)
       ResponseType/NUMBER (to-num resp)
-      ResponseType/SIMPLE (to-string resp (Charset/forName "UTF-8"))
+      ResponseType/SIMPLE (to-string resp)
       ResponseType/MULTI (to-seq resp))))
