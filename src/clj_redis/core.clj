@@ -109,6 +109,6 @@
         (.arg req ^double arg)
         (bytes? arg)
         (.arg req ^bytes arg)
-        :default
+        :else
         (throw (ex-info (str "Unsupported arg type: " (.getClass arg)) {:arg arg}))))
     req))

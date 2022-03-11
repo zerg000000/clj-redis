@@ -5,4 +5,5 @@
 .clj-kondo/.cache
 .lsp/
 .portal/
+.calva/
 *.iml

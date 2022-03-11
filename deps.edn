@@ -6,4 +6,6 @@
                   :extra-deps  {org.clojure/test.check {:mvn/version "1.1.1"}
                                 lambdaisland/kaocha    {:mvn/version "1.63.998"}
                                 funcool/promesa {:mvn/version "8.0.450"}
-                                clj-test-containers/clj-test-containers {:mvn/version "0.5.0"}}}}}
+                                clj-test-containers/clj-test-containers {:mvn/version "0.5.0"}}}
+           :gen {:replace-paths ["tools"]
+                 :extra-deps {org.clojure/data.json {:mvn/version "2.4.0"}}}}}
