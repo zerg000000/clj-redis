@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  JAVA_VERSION: '11'
+  TOOLS_DEPS_VERSION: '1.10.3.822'
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            ~/.m2/
+            ~/.gitlibs/
+          key: deps-v2-${{ hashFiles('**/deps.edn') }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: DeLaGuardo/setup-clojure@3.4
+        with:
+          tools-deps: ${{ env.TOOLS_DEPS_VERSION }}
+      - run: clojure -Mtest
