@@ -1,5 +1,5 @@
-{:paths ["src"]
- :deps {org.clojure/clojure {:mvn/version "1.10.3"}
+{:paths ["src" "gen"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
         io.vertx/vertx-redis-client {:mvn/version "4.2.5"}}
  :aliases {:test {:main-opts   ["-m" "kaocha.runner"]
                   :extra-paths ["test"]
@@ -8,4 +8,5 @@
                                 funcool/promesa {:mvn/version "8.0.450"}
                                 clj-test-containers/clj-test-containers {:mvn/version "0.5.0"}}}
            :gen {:replace-paths ["tools"]
-                 :extra-deps {org.clojure/data.json {:mvn/version "2.4.0"}}}}}
+                 :extra-deps {org.clojure/data.json {:mvn/version "2.4.0"}
+                              rewrite-clj/rewrite-clj {:mvn/version "1.1.45"}}}}}

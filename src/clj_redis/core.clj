@@ -1,29 +1,31 @@
 (ns clj-redis.core
   (:refer-clojure :exclude [send])
-  (:require [clj-redis.response :as response])
+  (:require
+    [clj-redis.response :as response])
   (:import
     (io.vertx.core
       Future
       Vertx)
-    (io.vertx.core.buffer
-      Buffer)
-    (io.vertx.core.json
-      JsonArray
-      JsonObject)
     (io.vertx.redis.client
+      Command
       Redis
       RedisClientType
       RedisOptions
       RedisReplicas
       RedisRole
       Request)
+    (io.vertx.redis.client.impl
+      RequestImpl)
     (java.util
       List)
     (java.util.concurrent
       CompletionStage)
-    (java.util.function Function)))
+    (java.util.function
+      Function)))
 
-(defn jfn [f]
+
+(defn jfn
+  [f]
   (reify Function
     (apply [this t] (f t))))
 
@@ -87,28 +89,7 @@
       (.toCompletionStage)))
 
 
-(defn ^Request cmd
+(defn cmd
   "Return Redis Request"
-  [command args]
-  (let [req (Request/cmd command)]
-    (doseq [arg args]
-      (cond
-        (instance? String arg)
-        (.arg req ^String arg)
-        (instance? JsonObject arg)
-        (.arg req ^JsonObject arg)
-        (instance? JsonArray arg)
-        (.arg req ^JsonArray arg)
-        (instance? Buffer arg)
-        (.arg req ^Buffer arg)
-        (boolean? arg)
-        (.arg req ^boolean arg)
-        (int? arg)
-        (.arg req ^int arg)
-        (double? arg)
-        (.arg req ^double arg)
-        (bytes? arg)
-        (.arg req ^bytes arg)
-        :else
-        (throw (ex-info (str "Unsupported arg type: " (.getClass arg)) {:arg arg}))))
-    req))
+  ^Request [^Command command args]
+  (RequestImpl. command (into-array args)))

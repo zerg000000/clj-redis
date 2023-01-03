@@ -1,33 +1,58 @@
 (ns gen
-  (:require [clojure.data.json :as json]
-            [clojure.string :as string]))
+  (:require
+    [clojure.data.json :as json]
+    [clojure.reflect :as r]
+    [clojure.string :as string]
+    [rewrite-clj.node :as n])
+  (:import
+    (io.vertx.redis.client
+      Command)))
 
-(def file "https://raw.githubusercontent.com/vert-x3/vertx-redis-client/4.2.5/tools/commands.json")
 
-(defn generate []
-  (let [cmds   (-> (slurp file)
-                   (json/read-str)
-                   (get "commands"))
-        target "src/clj_redis/command.clj"]
+(defn gen-fn
+  [fn-name]
+  (-> (n/list-node
+        [(n/token-node 'defn)
+         (n/spaces 1)
+         (n/token-node (symbol fn-name))
+         (n/spaces 1)
+         (n/vector-node [(n/token-node 'args)])
+         (n/newline-node "\n")
+         (n/whitespace-node "  ")
+         (n/list-node
+           [(n/token-node 'core/cmd)
+            (n/spaces 1)
+            (n/token-node (symbol "Command" fn-name))
+            (n/spaces 1)
+            (n/token-node 'args)])])
+      (n/string)))
+
+
+(defn generate
+  []
+  (let [cmds   (->> (r/reflect Command)
+                    (:members)
+                    (map :name))
+        target "gen/clj_redis/command.clj"]
     (spit target
           "(ns clj-redis.command
   (:require [clj-redis.core :as core])
   (:import [io.vertx.redis.client Command]))\n")
     (mapv
-     (fn [{:strs [name]}]
-       (let [cmd (-> name
-                     (string/upper-case)
-                     (string/replace ":" "")
-                     (string/replace "-" "_"))]
-       (spit
-        target
-        (str
-         "(defn " cmd "\n"
-         "  [args]\n"
+      (fn [name]
+        (let [cmd (-> name
+                      (string/upper-case)
+                      (string/replace ":" "")
+                      (string/replace "-" "_"))]
+          (spit
+            target
+            (gen-fn cmd)
+            :append true)))
+      cmds)))
 
-         "  (core/cmd Command/" cmd " args))\n\n")
-        :append true)))
-    cmds)))
 
 (comment 
-  (generate))
+  (generate)
+  (require '[rewrite-clj.node :as n])
+  (-> (gen-fn "SADD")
+      (print)))

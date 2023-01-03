@@ -1,10 +1,14 @@
 (ns clj-redis.core-itest
-  (:require [clojure.test :refer :all]
-            [clj-test-containers.core :as tc]
-            [clj-redis.core :as redis]
-            [clj-redis.command :as cmd]
-            [clj-redis.response :as resp])
-  (:import (io.vertx.core Vertx)))
+  (:require
+    [clj-redis.command :as cmd]
+    [clj-redis.core :as redis]
+    [clj-redis.response :as resp]
+    [clj-test-containers.core :as tc]
+    [clojure.test :refer :all])
+  (:import
+    (io.vertx.core
+      Vertx)))
+
 
 (deftest send-tests
   (let [redis-server (-> (tc/create {:image-name "redis:6"
