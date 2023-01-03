@@ -27,11 +27,12 @@
 (defn jfn
   [f]
   (reify Function
-    (apply [this t] (f t))))
+    (apply [_ t] (f t))))
 
 
-(defn ^RedisOptions map->redis-options
+(defn map->redis-options
   "Configure and return RedisOption"
+  ^RedisOptions
   [{:keys [max-waiting-handler type net-client-options
            endpoints master-name role use-replicas
            max-nested-arrays pool-cleaner-interval
@@ -54,37 +55,37 @@
     pool-name (.setPoolName pool-name)))
 
 
-(defn ^Redis create
+(defn create
   "Create Redis instance"
-  ([^Vertx vertx]
+  (^Redis [^Vertx vertx]
    (Redis/createClient vertx))
-  ([^Vertx vertx options]
+  (^Redis [^Vertx vertx options]
    (Redis/createClient vertx (map->redis-options options))))
 
 
-(defn ^Future send*
-  [^Redis client ^Request req]
+(defn send*
+  ^Future [^Redis client ^Request req]
   (.send client req))
 
 
-(defn ^Future batch*
-  [^Redis client ^List reqs]
+(defn batch*
+  ^Future [^Redis client ^List reqs]
   (.batch client reqs))
 
 
-(defn ^CompletionStage send
+(defn send
   "Return CompletionStage<Response|nil>. Sends a command"
-  ([^Redis client ^Request req] (send client req {}))
-  ([^Redis client ^Request req {:keys [mapper]
-                                :or {mapper response/to-val}}]
+  (^CompletionStage [^Redis client ^Request req] (send client req {}))
+  (^CompletionStage [^Redis client ^Request req {:keys [mapper]
+                                                 :or {mapper response/to-val}}]
    (cond-> (-> (send* client req)
                (.toCompletionStage))
      mapper (.thenApply (jfn mapper)))))
 
 
-(defn ^CompletionStage batch
+(defn batch
   "Return CompletionStage<List<Response|nil>>. Sends a list of commands in a single IO operation"
-  [client reqs]
+  ^CompletionStage [client reqs]
   (-> (batch* client reqs)
       (.toCompletionStage)))
 
@@ -92,4 +93,7 @@
 (defn cmd
   "Return Redis Request"
   ^Request [^Command command args]
-  (RequestImpl. command (into-array args)))
+  (let [req (RequestImpl. command)]
+    (doseq [arg args]
+      (.arg req arg))
+    req))

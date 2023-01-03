@@ -18,16 +18,8 @@
   (core/cmd Command/STRALGO args))
 
 
-(defn GETLASTKEY [args]
-  (core/cmd Command/GETLASTKEY args))
-
-
 (defn ZADD [args]
   (core/cmd Command/ZADD args))
-
-
-(defn GETINTERVAL [args]
-  (core/cmd Command/GETINTERVAL args))
 
 
 (defn ECHO [args]
@@ -40,10 +32,6 @@
 
 (defn EVALSHA [args]
   (core/cmd Command/EVALSHA args))
-
-
-(defn ISWRITE [args]
-  (core/cmd Command/ISWRITE args))
 
 
 (defn HINCRBY [args]
@@ -80,10 +68,6 @@
 
 (defn XPENDING [args]
   (core/cmd Command/XPENDING args))
-
-
-(defn ISVOID [args]
-  (core/cmd Command/ISVOID args))
 
 
 (defn DEL [args]
@@ -358,10 +342,6 @@
   (core/cmd Command/SMISMEMBER args))
 
 
-(defn ISPUBSUB [args]
-  (core/cmd Command/ISPUBSUB args))
-
-
 (defn HGET [args]
   (core/cmd Command/HGET args))
 
@@ -408,10 +388,6 @@
 
 (defn ZMSCORE [args]
   (core/cmd Command/ZMSCORE args))
-
-
-(defn CREATE [args]
-  (core/cmd Command/CREATE args))
 
 
 (defn SPOP [args]
@@ -502,10 +478,6 @@
   (core/cmd Command/MEMORY args))
 
 
-(defn ISMULTIKEY [args]
-  (core/cmd Command/ISMULTIKEY args))
-
-
 (defn ZRANGE [args]
   (core/cmd Command/ZRANGE args))
 
@@ -524,10 +496,6 @@
 
 (defn XACK [args]
   (core/cmd Command/XACK args))
-
-
-(defn GETFIRSTKEY [args]
-  (core/cmd Command/GETFIRSTKEY args))
 
 
 (defn GEOADD [args]
@@ -674,10 +642,6 @@
   (core/cmd Command/HOST args))
 
 
-(defn GETARITY [args]
-  (core/cmd Command/GETARITY args))
-
-
 (defn XAUTOCLAIM [args]
   (core/cmd Command/XAUTOCLAIM args))
 
@@ -708,10 +672,6 @@
 
 (defn SET [args]
   (core/cmd Command/SET args))
-
-
-(defn CREATE [args]
-  (core/cmd Command/CREATE args))
 
 
 (defn ZRANK [args]
@@ -770,20 +730,8 @@
   (core/cmd Command/LATENCY args))
 
 
-(defn ISMOVABLE [args]
-  (core/cmd Command/ISMOVABLE args))
-
-
-(defn ISKEYLESS [args]
-  (core/cmd Command/ISKEYLESS args))
-
-
 (defn RANDOMKEY [args]
   (core/cmd Command/RANDOMKEY args))
-
-
-(defn GETBYTES [args]
-  (core/cmd Command/GETBYTES args))
 
 
 (defn ZPOPMIN [args]
@@ -812,10 +760,6 @@
 
 (defn ZRANDMEMBER [args]
   (core/cmd Command/ZRANDMEMBER args))
-
-
-(defn ISREADONLY [args]
-  (core/cmd Command/ISREADONLY args))
 
 
 (defn XTRIM [args]
