@@ -33,7 +33,8 @@
   (let [cmds   (->> (r/reflect Command)
                     (:members)
                     (filter #(string/ends-with? (str (:type %)) "Command"))
-                    (map :name))
+                    (map :name)
+                    (sort))
         target "gen/clj_redis/command.clj"]
     (spit target
           "(ns clj-redis.command
